@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.9-slim
 
 WORKDIR /app
 
@@ -9,4 +9,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "backend.wsgi"] 
+# Создаем директории для статики и медиафайлов
+RUN mkdir -p /app/static /app/media && \
+    chmod -R 755 /app/static /app/media
+
+CMD ["gunicorn", "kittygram_backend.wsgi:application", "--bind", "0.0.0.0:8000"] 
